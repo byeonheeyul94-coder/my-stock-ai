@@ -28,7 +28,12 @@ def save_data(df, file_path):
 
 @st.cache_data(ttl=3600)
 def get_krx_list():
-    return fdr.StockListing('KRX')[['Code', 'Name']]
+    try:
+        # 정상 작동 시 거래소 목록 가져오기
+        return fdr.StockListing('KRX')[['Code', 'Name']]
+    except:
+        # ⚠️ 서버 에러 발생 시 앱이 멈추지 않게 비상용 기본 종목 반환
+        return pd.DataFrame({'Code':['005930', '000660', '005380'], 'Name':['삼성전자', 'SK하이닉스', '현대차']})
 
 # 3. 전략 판독기 (추가매수, 보유, 매수, 매도, 손절)
 def get_strategy_signal(df, curr_p, buy_p=None):
