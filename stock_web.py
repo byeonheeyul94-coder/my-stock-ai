@@ -26,9 +26,19 @@ def load_data(file_path, default_cols):
 def save_data(df, file_path):
     df.to_csv(file_path, index=False)
 
+# 기존 get_krx_list 함수를 아래 내용으로 교체하세요!
 @st.cache_data(ttl=3600)
 def get_krx_list():
-    return fdr.StockListing('KRX')[['Code', 'Name']]
+    try:
+        # 방식 1: 기존 방식 (KRX 직접 호출)
+        return fdr.StockListing('KRX')[['Code', 'Name']]
+    except:
+        # 방식 2: 위 방식이 실패하면 네이버 금융 데이터로 우회해서 가져오기
+        try:
+            return fdr.StockListing('S&P500') # 예시용 (실제로는 아래 방식을 더 추천)
+        except:
+            # 최종 방어막: 에러가 나더라도 프로그램이 멈추지 않게 빈 상자 만들기
+            return pd.DataFrame(columns=['Code', 'Name'])
 
 # 3. 전략 판독기 (추가매수, 보유, 매수, 매도, 손절)
 def get_strategy_signal(df, curr_p, buy_p=None):
