@@ -28,17 +28,7 @@ def save_data(df, file_path):
 
 @st.cache_data(ttl=3600)
 def get_krx_list():
-    try:
-        # 1순위: 네이버 증권 서버에서 종목 리스트 가져오기 (KRX보다 훨씬 안정적입니다)
-        df = fdr.StockListing('NAVER')
-        return df[['Code', 'Name']]
-    except:
-        try:
-            # 2순위: KRX 서버 시도
-            return fdr.StockListing('KRX')[['Code', 'Name']]
-        except:
-            # 3순위: 최후의 수단 (비상용)
-            return pd.DataFrame({'Code':['005930', '000660', '005380'], 'Name':['삼성전자', 'SK하이닉스', '현대차']})
+    return fdr.StockListing('KRX')[['Code', 'Name']]
 
 # 3. 전략 판독기 (추가매수, 보유, 매수, 매도, 손절)
 def get_strategy_signal(df, curr_p, buy_p=None):
