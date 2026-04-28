@@ -1,6 +1,4 @@
 streamlit
 pandas
+FinanceDataReader --upgrade
 plotly
-beautifulsoup4
-lxml==4.9.4
-https://github.com/FinanceData/FinanceDataReader/archive/master.zip
